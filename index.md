@@ -147,30 +147,30 @@
     
 * asyncData
   * 这是一个组件渲染之前调用的异步获取数据的方法
-  ```
-  async asyncData({ app, params, route }) {//目前我只用了这3个参数，从上下文中结构出来，参数就是字面上的意思
-    let [res1, res2] = await Promise.all([
-      app.http.post('/api1'),//这里我把axios注入到一个叫http的属性，实质上跟axios.post('/api')是一样的
-      app.http.post('/api2', data)
-    ])
-    let path = route.path;//获取路由地址
-    
-    //当然，你也可以写成
-    /*
-    app.http.post('/api').then(res=>{
-      <!-- 请求返回后要执行的代码 -->
-    }).catch(err=>{
-      <!-- 请求返回后要执行的代码 -->
-    })
-    */
-    
-    return {//讲结果以对象的形式返回，这个时候在页面可以直接绑定，用vue的方法，比如v-bind、v-model、{{resData1}}等等
-      resData1,
-      resData2
+    ```
+    async asyncData({ app, params, route }) {//目前我只用了这3个参数，从上下文中结构出来，参数就是字面上的意思
+      let [res1, res2] = await Promise.all([
+        app.http.post('/api1'),//这里我把axios注入到一个叫http的属性，实质上跟axios.post('/api')是一样的
+        app.http.post('/api2', data)
+      ])
+      let path = route.path;//获取路由地址
+
+      //当然，你也可以写成
+      /*
+      app.http.post('/api').then(res=>{
+        <!-- 请求返回后要执行的代码 -->
+      }).catch(err=>{
+        <!-- 请求返回后要执行的代码 -->
+      })
+      */
+
+      return {//讲结果以对象的形式返回，这个时候在页面可以直接绑定，用vue的方法，比如v-bind、v-model、{{resData1}}等等
+        resData1,
+        resData2
+      }
     }
-  }
-  ```
-  **注意：async、await是一对好基友，要同时出现**
+    ```
+    **注意：async、await是一对好基友，要同时出现**
   
 * no-ssr（有时候某些组件在ssr下显示有问题或者报错，不妨试试no-ssr）
   ```
@@ -212,3 +212,6 @@
       "devlocal": "cross-env BASE_URL=http://localhost:8888 nuxt"//开发的时候想改个地址运行也行
     }
     ```
+---
+
+## 下期预告 关于 Vue
