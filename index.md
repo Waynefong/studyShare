@@ -198,6 +198,22 @@
 
 * 其他（暂时想不起还有什么东西要说了）
   * 跳链接：用习惯了vue-router可能都会写router-link，nuxt经过封装以后改成了nuxt-link
+  * 修改默认模板
+    ```
+    //在根目录下创建一个app.html，内容如下，这个是默认的，如果想要在模板里添加一些别的元素，在里面写上，生成出来的页面就会默认带有自定义添加的内容啦
+    <!DOCTYPE html>
+    <html {{ HTML_ATTRS }}>
+
+    <head {{ HEAD_ATTRS }}>
+      {{ HEAD }}
+    </head>
+
+    <body {{ BODY_ATTRS }}>
+      {{ APP }}
+    </body>
+
+    </html>
+    ```
   
 * 打包
   * 项目依赖里能看到一个叫cross-env的东西，它是创建项目时自带安装的，其实...它是个神器
