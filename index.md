@@ -320,8 +320,7 @@
       * 创建一个类（***MessageBuffer***），处理消息（添加消息、获取消息）。
       * 创建一个类（***ChatHandler***），处理发送按钮事件（类似前端接口），实际上只是拿到新消息然后交给 MessageBuffer 进行消息添加。
       * 创建一个类（***UpdateMsgHandler***），负责向 MessageBuffer 获取消息
-    * 上码
-      * 服务器端
+    * 服务器端
     ```
     class MessageBuffer(object):
 
