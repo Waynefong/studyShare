@@ -21,13 +21,13 @@
   
 ## 开始
 
-* 创建项目
+### ***创建项目***
   ```
   npx create-nuxt-app <项目名>
   ```
   **注意：npx是npm 5.2.0以后新加的命令行，和全局安装 create-nuxt-app 然后再创建项目是一个道理**
 
-* 我用的版本
+### ***我用的版本***
   ```
     "dependencies": {
       "@nuxtjs/axios": "^5.3.6",
@@ -45,14 +45,14 @@
     }
   ```
 
-* 别名  
+### ***别名***  
 
   |　　　　　别名　　　　　|　　　　　目录　　　　　|
   | :-: | :-: |
   |　　　　　`~`或`@`　　　　　|　　　　　src目录　　　　　|
   |　　　　　`~~`或`@@`　　　　　|　　　　　根目录　　　　　|
  
-* nuxt.config.js（这是一个全局配置文件，整合了很多插件的配置文件，例如：webpack，vue）
+### ***nuxt.config.js***（这是一个全局配置文件，整合了很多插件的配置文件，例如：webpack，vue）
     ```
     mode: 'spa'//nuxt模式，spa：单页面，universal：默认
     ```
@@ -132,7 +132,7 @@
     }
     ```
 
-* 插件简单的注入方式
+### ***插件简单的注入方式***
   * 如果你需要在项目里全局使用某个函数或属性值，就需要将这个函数或属性值注入到vue或nuxt
   * 我比较懒，干脆都注入了，单独注入的方式可以参考官方api，往上看有链接
     ```
@@ -145,7 +145,7 @@
     ```
     **注意：inject是vue+nuxt同时注入的方法，为什么会有这两种看上去不同的环境的注入？因为nuxt获取数据的方法asyncData它是在vue实例创建之前调用的，所以用Vue.prototype注入的函数或属性值在asyncData里无法调用。so，为什么，就是因为这个**
     
-* asyncData
+### ***asyncData***
   * 这是一个组件渲染之前调用的异步获取数据的方法
     ```
     async asyncData({ app, params, route }) {//目前我只用了这3个参数，从上下文中结构出来，参数就是字面上的意思
@@ -172,14 +172,14 @@
     ```
     **注意：async、await是一对好基友，要同时出现**
   
-* no-ssr（有时候某些组件在ssr下显示有问题或者报错，不妨试试no-ssr）
+### ***no-ssr***（有时候某些组件在ssr下显示有问题或者报错，不妨试试no-ssr）
   ```
   <no-ssr placeholder="Loading...">
     <!-- 此组件仅在客户端呈现 -->
   </no-ssr>
   ```
   
-* 自定义头部内容
+### ***自定义头部内容***
   * seo可能会要求不同的页面有它专属的title，keywords，description，head()这个方法是Nuxt自带的自定义头部的方法
     ```
     head() {
@@ -196,7 +196,7 @@
     }
     ```
 
-* 其他（暂时想不起还有什么东西要说了）
+### ***其他***（暂时想不起还有什么东西要说了）
   * 跳链接：用习惯了vue-router可能都会写router-link，nuxt经过封装以后改成了nuxt-link
   * 修改默认模板
     ```
@@ -230,4 +230,192 @@
     ```
 ---
 
-## 下期预告 关于 Vue
+## 关于Tornado
+  * 它是什么？
+    * 是一种开源的 Web 服务器软件
+  * 说人话
+    * 可以用python语言写一个服务端，配合前端html实现一个网站，类似Flask（自行百度=。=）
+  * 官网
+    * [Tornado](https://www.tornadoweb.org/en/stable/)
+    * [中文版api](https://www.osgeo.cn/tornado/index.html)
+
+## 开始
+
+### ***熟悉的hello world！***
+  * 参考
+    * [hello world](https://www.tornadoweb.org/en/stable/guide/structure.html)
+  * 代码
+  ```
+  import tornado.ioloop
+  import tornado.web
+
+  class MainHandler(tornado.web.RequestHandler):
+      def get(self):
+          self.write("Hello, world")
+
+  def make_app():
+      return tornado.web.Application([
+          (r"/", MainHandler),
+      ])
+
+  if __name__ == "__main__":
+      app = make_app()
+      app.listen(8888)
+      tornado.ioloop.IOLoop.current().start()
+  ```
+  * 来点不一样的
+  ```
+  # 上述Application里注册的，有点类似于前端Vue的Router，当然我们也可以给它一些不同的配置。
+  # debug开启，就可以实现热更新，不需要每次修改完都要手动重启。
+
+  settings = {
+    "cookie_secret": "\xecE\x15\x13\x94\xb4\x80\xc3\xdd&4\x81s\xe4\x9f\x1d\x160(\xf5\x1b\xe9\xe8\xfc",
+    "template_path": "server/templates",
+    "static_path": "server/static",
+    "debug": True
+  }
+
+  def make_app():
+      return tornado.web.Application([
+          (r"/", MainHandler),
+      ],**settings)
+  ```
+
+### ***创建一个多线程***
+  * 有什么用？
+    * 为了一键启动python程序和tornado程序，同时避免跨域问题发生。
+  * 直接上代码
+  ```
+  # 创建一个server，make_app()返回了tornado.web.Application，可以参照上面demo。
+  # 多线程存在一个ioloop的问题，此处引入asyncio即可解决。
+
+  import tornado.ioloop
+  import tornado.web
+  import asyncio
+
+  def start_server():
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    app = make_app()
+    app.listen(8888)
+    tornado.ioloop.IOLoop.current().start()
+  
+  def run():
+    threading.Thread(target=start_server).start()
+  ```
+
+### ***分享一个长轮询***
+  * 目标
+    * 做一个聊天室
+  * 需求
+    * a和b聊天，当a发送内容后，b的界面不需要刷新，就能看到最新消息。
+  * 旧轮询方案
+    * 实现：
+      * 前端设置一个定时器，setInterval，假定3秒执行一次。
+    * 弊端
+      * 如果a说话比较频繁，可能3秒后会弹出非常多条信息。
+      * 如果a和b之间只是打开了聊天窗（其实只有一个人打开也是同样道理），并没有做交流，定时器依然会不停的做轮询，做无用功。
+  * 新轮询方案
+    * 实现
+      * 创建一个类（***MessageBuffer***），处理消息（添加消息、获取消息）。
+      * 创建一个类（***ChatHandler***），处理发送按钮事件（类似前端接口），实际上只是拿到新消息然后交给 MessageBuffer 进行消息添加。
+      * 创建一个类（***UpdateMsgHandler***），负责向 MessageBuffer 获取消息
+    * 上码
+      * 服务器端
+    ```
+    class MessageBuffer(object):
+
+      def __init__(self):
+          # 类似线程锁
+          self.cond = tornado.locks.Condition()
+          # 存放消息
+          self.cache = []
+
+      def get_msg_since(self, cursor):
+          results = []
+          # 把数组翻转，从最后一个取，当取到id与cursor相同时，跳出循环。
+          # id 是区分每一条消息的唯一标识
+          # cursor 是已经推送的消息里最后一条的id
+          for msg in reversed(self.cache):
+              if msg["id"] == cursor:
+                  break
+              results.append(msg)
+          results.reverse()
+          return results
+
+      def add_msg(self, message):
+            self.cache.append(msg)
+            # 叫醒被锁线程
+            self.cond.notify_all()
+
+    # 创建一个实例
+    msgBuffer = MessageBuffer()
+
+    class ChatHandler(tornado.web.RequestHandler):
+      def post(self):
+          # 获取客户端传入的消息
+          query = self.get_argument('query', default='')
+          if query != '':
+              # id 是生成的一个随机数
+              message = {'id': uuid.uuid4(), 'text': query}
+              msgBuffer.add_msg(message)
+
+    class UpdateMsgHandler(tornado.web.RequestHandler):
+      async def post(self):
+          # cursor 是已推送消息里最后一条的id
+          cursor = self.get_argument('cursor', default=None)
+          messages = msgBuffer.get_msg_since(cursor)
+          while not messages:
+              # 创建一个阻塞（个人理解）
+              self.wait_future = msgBuffer.cond.wait()
+              try:
+                  await self.wait_future
+              except asyncio.CancelledError:
+                  return
+              messages = msgBuffer.get_msg_since(cursor)
+          res = {'code': 0, 'message': 'ok', 'history': messages}
+          self.write(json.dumps(res))
+
+    # 别忘记把两个继承自tornado中RequestHandler的类注册到Application中
+    def make_app():
+      return tornado.web.Application([
+          (r'/chat', ChatHandler),
+          (r'/updatemsg', UpdateMsgHandler)
+      ])
+    ```
+      * 客户端
+    ```
+    var updater = {
+        cursor:null,
+
+        poll: function () {
+            $.ajax({
+                type: 'post',
+                url: '/updatemsg',
+                data:{
+                    cursor:updater.cursor
+                },
+                success: function (res) {
+                    var data = JSON.parse(res)
+                    if (data.code == 0) {
+                        //在这添加需要处理的逻辑
+                        //将cursor设置为已推送最后一条消息的id
+                        updater.cursor = data.history[data.history.length-1].id
+                        //然后再制造下一个等待线程
+                        window.setTimeout(updater.poll, 0);
+                    }
+                },
+                error: function (err) {
+                    console.log(err)
+                }
+            })
+        }
+    }
+    ```
+
+    * 步骤
+      * 页面打开时请求/updatemsg，cursor的初始值可以是null（因为一开始消息列表是空的，链接了数据库除外）
+      * 这时候 UpdateMsgHandler 中就有一个等待的线程
+      * 输入一条消息提交到/chat，ChatHandler 里会触发 add_msg 方法，add_msg方法里有一个唤醒机制，叫醒在等待的线程
+      * 这时候 UpdateMsgHandler 里的线程就会调用 get_msg_since 方法得到最新的消息列表返回到客户端，同时跳出while循环
+      * 客户端拿到接口返回值以后进行页面渲染，***同时别忘了再次请求/updatemsg（制造下一个等待线程）***
