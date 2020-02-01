@@ -374,6 +374,9 @@
               messages = msgBuffer.get_msg_since(cursor)
           res = {'code': 0, 'message': 'ok', 'history': messages}
           self.write(json.dumps(res))
+          
+      def on_connection_close(self):
+        self.wait_future.cancel()
 
     # 别忘记把两个继承自tornado中RequestHandler的类注册到Application中
     def make_app():
