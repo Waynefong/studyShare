@@ -421,3 +421,7 @@
       * 输入一条消息提交到/chat，ChatHandler 里会触发 add_msg 方法，add_msg方法里有一个唤醒机制，叫醒在等待的线程
       * 这时候 UpdateMsgHandler 里的线程就会调用 get_msg_since 方法得到最新的消息列表返回到客户端，同时跳出while循环
       * 客户端拿到接口返回值以后进行页面渲染，***同时别忘了再次请求/updatemsg（制造下一个等待线程）***
+
+---
+
+## 关于React
