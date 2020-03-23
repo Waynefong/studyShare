@@ -424,4 +424,5 @@
 
 ---
 
-## 关于React
+## 关于VUE官方SSR
+* 我写了一个demo，还有README，可以参考一下。[上链接](https://github.com/Waynefong/vue_ssr_demo)
